@@ -3,14 +3,18 @@
 use ff::Field;
 use pasta_curves::arithmetic::{CurveAffine, FieldExt};
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::convert::TryInto;
 
+pub(crate) mod fp;
+pub(crate) mod fq;
 
 /// Lookup table mapping endoscalars to their corresponding NUM_BITS-bit representations.
-fn lookup_table<F: FieldExt, const NUM_BITS: usize>() -> Vec<([bool; NUM_BITS], F)> {
+fn lookup_table<F: FieldExt, const NUM_BITS: usize>(
+) -> (Vec<([bool; NUM_BITS], F)>, BTreeMap<F, [bool; NUM_BITS]>) {
     let mut endoscalars = BTreeSet::new();
     let mut table = Vec::new();
+    let mut inv_table = BTreeMap::new();
     let num_rows = 1 << NUM_BITS;
 
     for row in 0..num_rows {
@@ -20,9 +24,10 @@ fn lookup_table<F: FieldExt, const NUM_BITS: usize>() -> Vec<([bool; NUM_BITS], 
         assert!(endoscalars.insert(scalar));
 
         table.push((bits, scalar));
+        inv_table.insert(scalar, bits);
     }
 
-    table
+    (table, inv_table)
 }
 
 /// Maps an N-bit bitstring to a scalar.
