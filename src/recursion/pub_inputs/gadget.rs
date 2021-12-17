@@ -7,6 +7,10 @@ use crate::{
 };
 use pasta_curves::{arithmetic::FieldExt, Fp, Fq};
 
+mod chip;
+mod lookup;
+use lookup::TableConfig;
+
 /// Instructions to map bitstring public inputs to and from endoscalars.
 pub trait PubInputsInstructions<F: FieldExt + PubInputsLookup<K, N>, const K: usize, const N: usize>
 {
