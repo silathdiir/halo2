@@ -62,6 +62,25 @@ pub(crate) fn endoscale<F: FieldExt, const N: usize>(bits: [bool; N]) -> F {
     scalar
 }
 
+/// Maps an arbitrary-length bitstring to a list of endoscalars, where each endoscalar
+/// corresponds to an N-bit chunk. Uses zero padding if necessary.
+pub(crate) fn endoscale_with_padding<F: FieldExt, const N: usize>(bits: &[bool]) -> Vec<F> {
+    let padding_len = bits.len() % N;
+    let mut padded_bits = bits.to_vec();
+    if padding_len != 0 {
+        padded_bits.extend_from_slice(&vec![false; padding_len]);
+    }
+
+    let mut endoscalars = Vec::new();
+    for chunk_idx in 0..(padded_bits.len() / N) {
+        let idx = chunk_idx * 10;
+        let endoscalar = endoscale::<F, N>(padded_bits[idx..(idx + 10)].try_into().unwrap());
+        endoscalars.push(endoscalar);
+    }
+
+    endoscalars
+}
+
 pub(crate) fn i2lebsp<const NUM_BITS: usize>(int: u64) -> [bool; NUM_BITS] {
     assert!(NUM_BITS <= 64);
 
