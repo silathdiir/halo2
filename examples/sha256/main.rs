@@ -166,4 +166,6 @@ impl<F: FieldExt, Sha256Chip: Sha256Instructions<F>> Sha256<F, Sha256Chip> {
     }
 }
 
-fn main() {}
+fn main() {
+    benches::bench("gupeng", 17);
+}

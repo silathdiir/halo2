@@ -20,7 +20,7 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use crate::{BlockWord, Sha256, Table16Chip, Table16Config, BLOCK_SIZE};
 
 #[allow(dead_code)]
-fn bench(name: &str, k: u32, c: &mut Criterion) {
+pub fn bench(name: &str, k: u32) {
     #[derive(Default)]
     struct MyCircuit {}
 
@@ -147,6 +147,7 @@ fn bench(name: &str, k: u32, c: &mut Criterion) {
         .read_to_end(&mut proof)
         .expect("Couldn't read proof");
 
+    /*
     c.bench_function(&verifier_name, |b| {
         b.iter(|| {
             let msm = params.empty_msm();
@@ -156,11 +157,12 @@ fn bench(name: &str, k: u32, c: &mut Criterion) {
             assert!(msm.eval());
         });
     });
+    */
 }
 
 #[allow(dead_code)]
 fn criterion_benchmark(c: &mut Criterion) {
-    bench("sha256", 17, c);
+    // bench("sha256", 17, c);
     // bench("sha256", 20, c);
 }
 
